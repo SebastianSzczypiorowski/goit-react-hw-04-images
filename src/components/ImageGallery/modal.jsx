@@ -1,32 +1,34 @@
-import { Component } from 'react';
 import PropTypes from 'prop-types';
+import { useEffect } from 'react';
 
-class Modal extends Component {
-  staticPropTypes = {
-    escFunc: PropTypes.func,
-    src: PropTypes.string,
-    alt: PropTypes.string,
-  };
-  componentDidMount() {
-    const overlay = document.querySelector('.overlay');
-    overlay.addEventListener('click', this.props.handleOverlayClick);
-    document.addEventListener('keydown', this.props.escFunc);
-  }
-  componentWillUnmount() {
-    const overlay = document.querySelector('.overlay');
-    overlay.removeEventListener('click', this.props.handleOverlayClick);
-    window.removeEventListener('click', this.props.escFunc);
-  }
+function Modal(props) {
+  const { escFunc, src, alt, handleOverlayClick } = props;
 
-  render() {
-    return (
-      <div className="overlay">
-        <div className="modal">
-          <img src={this.props.src} alt={this.props.alt} />
-        </div>
+  useEffect(() => {
+    const overlay = document.querySelector('.overlay');
+    overlay.addEventListener('click', handleOverlayClick);
+    document.addEventListener('keydown', escFunc);
+
+    return () => {
+      overlay.removeEventListener('click', handleOverlayClick);
+      document.removeEventListener('keydown', escFunc);
+    };
+  }, [escFunc, handleOverlayClick]);
+
+  return (
+    <div className="overlay">
+      <div className="modal">
+        <img src={src} alt={alt} />
       </div>
-    );
-  }
+    </div>
+  );
 }
+
+Modal.propTypes = {
+  escFunc: PropTypes.func,
+  src: PropTypes.string,
+  alt: PropTypes.string,
+  handleOverlayClick: PropTypes.func,
+};
 
 export default Modal;
