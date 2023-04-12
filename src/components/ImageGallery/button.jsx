@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types';
 
+// 1
+
 const Button = ({ handleLoadMore }) => {
   return (
     <div className="button-container">
